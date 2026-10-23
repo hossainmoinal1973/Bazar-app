@@ -1,62 +1,251 @@
 
+
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bn">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Bazar App</title>
+  <title>Bazar App - Online Marketplace</title>
   <style>
+    * { box-sizing: border-box; }
     body {
-      font-family: Arial, sans-serif;
       margin: 0;
-      background: #f4f6f8;
+      font-family: Arial, sans-serif;
+      background: #f5f6fa;
       color: #222;
     }
     header {
-      background: #542583;
+      background: #5427a8;
       color: white;
+      padding: 22px 15px;
       text-align: center;
-      padding: 24px 12px;
     }
-    main {
-      max-width: 700px;
-      margin: 20px auto;
-      padding: 16px;
+    header h1 { margin: 0 0 8px; }
+    .topbar {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 15px;
     }
-    .welcome, .product {
+    button, select, input {
+      font-size: 15px;
+      padding: 11px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+    }
+    button {
+      background: #5427a8;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    .topbar button { background: white; color: #5427a8; }
+    main { max-width: 1000px; margin: auto; padding: 18px; }
+    .intro {
       background: white;
       padding: 18px;
-      margin-bottom: 14px;
-      border-radius: 10px;
+      border-radius: 12px;
+      margin-bottom: 18px;
     }
-    .product h3 {
-      color: #542583;
+    .filters {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 18px;
     }
+    .filters input { flex: 1; min-width: 180px; }
+    .filters select { flex: 1; min-width: 160px; background: white; }
+    .products {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 14px;
+    }
+    .product {
+      background: white;
+      border-radius: 12px;
+      padding: 15px;
+      text-align: center;
+      box-shadow: 0 2px 7px #0000000c;
+    }
+    .emoji { font-size: 42px; margin: 8px; }
+    .product h3 { font-size: 17px; }
+    .price { color: #168044; font-weight: bold; }
+    .product button { width: 100%; margin-top: 8px; }
+    #empty { display: none; padding: 20px; text-align: center; }
+    footer { text-align: center; padding: 25px; color: #666; }
   </style>
 </head>
 <body>
   <header>
     <h1>Bazar App</h1>
-    <p>Your Online Marketplace</p>
+    <p id="tagline">আপনার অনলাইন বাজার</p>
+    <div class="topbar">
+      <button onclick="changeLanguage()" id="langButton">
+        English
+      </button>
+    </div>
   </header>
+
   <main>
-    <section class="welcome">
-      <h2>Welcome to Bazar App!</h2>
-      <p>Discover products and connect with sellers.</p>
+    <section class="intro">
+      <h2 id="welcome">Bazar App-এ স্বাগতম!</h2>
+      <p id="description">
+        বিভিন্ন ধরনের পণ্য দেখুন এবং আপনার পছন্দের পণ্য খুঁজুন।
+      </p>
     </section>
-    <h2>Our Products</h2>
-    <div class="product">
-      <h3>Product 1</h3>
-      <p>Price: To be added</p>
-    </div>
-    <div class="product">
-      <h3>Product 2</h3>
-      <p>Price: To be added</p>
-    </div>
-    <div class="product">
-      <h3>Product 3</h3>
-      <p>Price: To be added</p>
-    </div>
+
+    <section class="filters">
+      <input id="search" type="search"
+        placeholder="পণ্যের নাম লিখে খুঁজুন..."
+        oninput="showProducts()">
+
+      <select id="category" onchange="showProducts()">
+        <option value="all">সব ক্যাটাগরি</option>
+        <option value="fashion">পোশাক</option>
+        <option value="electronics">ইলেকট্রনিকস</option>
+        <option value="food">খাবার</option>
+        <option value="home">ঘরের জিনিস</option>
+        <option value="beauty">ব্যক্তিগত যত্ন</option>
+        <option value="other">অন্যান্য</option>
+      </select>
+    </section>
+
+    <section id="products" class="products"></section>
+    <p id="empty">কোনো পণ্য পাওয়া যায়নি।</p>
   </main>
+
+  <footer>
+    <p>© 2026 Bazar App</p>
+    <p id="footerText">
+      এটি একটি প্রাথমিক ডেমো। পণ্যের দাম ও তথ্য পরে আপডেট করা হবে।
+    </p>
+  </footer>
+
+  <script>
+    let language = "bn";
+
+    const products = [
+      { icon: "👕", category: "fashion", bn: "টি-শার্ট",
+        en: "T-Shirt", price: "৳ 350" },
+      { icon: "👟", category: "fashion", bn: "জুতা",
+        en: "Shoes", price: "৳ 900" },
+      { icon: "🎧", category: "electronics", bn: "হেডফোন",
+        en: "Headphones", price: "৳ 600" },
+      { icon: "⌚", category: "electronics", bn: "ঘড়ি",
+        en: "Watch", price: "৳ 750" },
+      { icon: "🍚", category: "food", bn: "চাল",
+        en: "Rice", price: "৳ 70" },
+      { icon: "🍯", category: "food", bn: "মধু",
+        en: "Honey", price: "৳ 250" },
+      { icon: "🪑", category: "home", bn: "চেয়ার",
+        en: "Chair", price: "৳ 800" },
+      { icon: "💡", category: "home", bn: "বাতি",
+        en: "Light Bulb", price: "৳ 120" },
+      { icon: "🧴", category: "beauty", bn: "শ্যাম্পু",
+        en: "Shampoo", price: "৳ 180" },
+      { icon: "🎒", category: "other", bn: "ব্যাগ",
+        en: "Bag", price: "৳ 500" }
+    ];
+
+    const words = {
+      bn: {
+        tagline: "আপনার অনলাইন বাজার",
+        welcome: "Bazar App-এ স্বাগতম!",
+        description: "বিভিন্ন ধরনের পণ্য দেখুন এবং আপনার পছন্দের পণ্য খুঁজুন।",
+        search: "পণ্যের নাম লিখে খুঁজুন...",
+        all: "সব ক্যাটাগরি", fashion: "পোশাক",
+        electronics: "ইলেকট্রনিকস", food: "খাবার",
+        home: "ঘরের জিনিস", beauty: "ব্যক্তিগত যত্ন",
+        other: "অন্যান্য", buy: "বিস্তারিত",
+        empty: "কোনো পণ্য পাওয়া যায়নি।",
+        footer: "এটি একটি প্রাথমিক ডেমো। পণ্যের দাম ও তথ্য পরে আপডেট করা হবে।",
+        langButton: "English",
+        detail: "এটি নমুনা পণ্য। বিক্রেতার তথ্য ও অর্ডারের সুবিধা পরে যোগ করা হবে।"
+      },
+      en: {
+        tagline: "Your Online Marketplace",
+        welcome: "Welcome to Bazar App!",
+        description: "Explore different products and find what you need.",
+        search: "Search for a product...",
+        all: "All Categories", fashion: "Fashion",
+        electronics: "Electronics", food: "Food",
+        home: "Home Items", beauty: "Personal Care",
+        other: "Other", buy: "Details",
+        empty: "No products found.",
+        footer: "This is an initial demo. Product details and prices can be updated later.",
+        langButton: "বাংলা",
+        detail: "This is a sample product. Seller information and ordering will be added later."
+      }
+    };
+
+    function changeLanguage() {
+      language = language === "bn" ? "en" : "bn";
+      const w = words[language];
+
+      document.documentElement.lang = language;
+      document.getElementById("tagline").textContent = w.tagline;
+      document.getElementById("welcome").textContent = w.welcome;
+      document.getElementById("description").textContent = w.description;
+      document.getElementById("search").placeholder = w.search;
+      document.getElementById("langButton").textContent = w.langButton;
+      document.getElementById("empty").textContent = w.empty;
+      document.getElementById("footerText").textContent = w.footer;
+
+      const select = document.getElementById("category");
+      [...select.options].forEach(option => {
+        option.textContent = w[option.value];
+      });
+
+      showProducts();
+    }
+
+    function showProducts() {
+      const query = document.getElementById("search").value.toLowerCase();
+      const category = document.getElementById("category").value;
+      const list = document.getElementById("products");
+      const w = words[language];
+
+      list.innerHTML = "";
+      let count = 0;
+
+      products
+        .filter(p => {
+          const name = (language === "bn" ? p.bn : p.en).toLowerCase();
+          return (category === "all" || p.category === category) &&
+            (name.includes(query) ||
+             p.bn.toLowerCase().includes(query) ||
+             p.en.toLowerCase().includes(query));
+        })
+        .forEach(p => {
+          count++;
+          const card = document.createElement("article");
+          card.className = "product";
+
+          const emoji = document.createElement("div");
+          emoji.className = "emoji";
+          emoji.textContent = p.icon;
+
+          const title = document.createElement("h3");
+          title.textContent = language === "bn" ? p.bn : p.en;
+
+          const price = document.createElement("p");
+          price.className = "price";
+          price.textContent = p.price + " • Demo";
+
+          const button = document.createElement("button");
+          button.textContent = w.buy;
+          button.onclick = () => alert(w.detail);
+
+          card.append(emoji, title, price, button);
+          list.appendChild(card);
+        });
+
+      document.getElementById("empty").style.display =
+        count === 0 ? "block" : "none";
+    }
+
+    showProducts();
+  </script>
 </body>
 </html>
