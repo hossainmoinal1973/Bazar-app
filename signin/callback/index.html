@@ -1,0 +1,28 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bazar App - Pi Sign-In</title>
+</head>
+<body>
+  <h2>Bazar App</h2>
+  <p id="status">Checking Pi Sign-In response...</p>
+
+  <script>
+    const status = document.getElementById("status");
+
+    if (window.location.hash.includes("access_token=")) {
+      status.textContent =
+        "Pi Sign-In response received. Secure verification is not configured yet.";
+    } else if (window.location.search) {
+      status.textContent =
+        "Returned to Bazar App. Please continue the sign-in setup.";
+    } else {
+      status.textContent =
+        "Bazar App sign-in callback page is ready.";
+    }
+  </script>
+</body>
+</html>
