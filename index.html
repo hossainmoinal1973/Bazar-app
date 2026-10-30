@@ -272,9 +272,10 @@ let piReady = false;
       sessionStorage.setItem("pi_oauth_state", state);
 
       try {
-message.textContent = "Pi Sign-In শুরু হচ্ছে...";
+        message.textContent = "Pi Sign-In শুরু হচ্ছে...";
+
         await window.Pi.signIn({
-          clientId: "Client ID", "WfuCLbijF5Znk9q6lWdRkvpN5y5DhbMSYb7KTtfBUFw", ",
+          clientId: "তোমার আসল Client ID",
           redirectUri: "https://hossainmoinal1973.github.io/Bazar-app/signin/callback/",
           scopes: ["username"],
           state: state
@@ -284,6 +285,7 @@ message.textContent = "Pi Sign-In শুরু হচ্ছে...";
         sessionStorage.removeItem("pi_oauth_state");
       }
     }
+
     showProducts();
   </script>
 </body>
