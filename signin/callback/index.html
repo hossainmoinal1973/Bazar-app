@@ -24,19 +24,17 @@
       const error = params.get("error");
 
       if (error) {
-        status.textContent =
-          "Pi Sign-In সম্পন্ন হয়নি। আবার চেষ্টা করুন।";
-        history.replaceState(null, "", window.location.pathname);
-        sessionStorage.removeItem("pi_oauth_state");
-        return;
-      }
+  status.textContent = "Pi OAuth Error: " + error;
+  history.replaceState(null, "", window.location.pathname);
+  sessionStorage.removeItem("pi_oauth_state");
+  return;
+}
 
       if (!token || !returnedState || !savedState ||
           returnedState !== savedState) {
         status.textContent =
           "Sign-In যাচাই করা যায়নি। Bazar App থেকে আবার চেষ্টা করুন।";
-        return;
-      }
+        return
 
       try {
         status.textContent = "Pi অ্যাকাউন্ট যাচাই করা হচ্ছে...";
