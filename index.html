@@ -87,7 +87,11 @@
       </button>
     </div>
   </header>
-
+<section class="intro" style="text-align:center; margin:18px;">
+    <h2>Pi Network দিয়ে সাইন ইন</h2>
+    <button onclick="signInWithPi()">Sign in with Pi</button>
+    <p id="piSignInMessage">Pi অ্যাকাউন্ট দিয়ে প্রবেশ করুন।</p>
+  </section>
   <main>
     <section class="intro">
       <h2 id="welcome">Bazar App-এ স্বাগতম!</h2>
@@ -245,7 +249,40 @@
       document.getElementById("empty").style.display =
         count === 0 ? "block" : "none";
     }
+let piReady = false;
 
+    try {
+      if (window.Pi) {
+        window.Pi.init({ version: "2.0" });
+        piReady = true;
+      }
+    } catch (error) {
+      console.error("Pi SDK error:", error);
+    }
+
+    async function signInWithPi() {
+      const message = document.getElementById("piSignInMessage");
+
+      if (!piReady || !window.Pi.signIn) {
+        message.textContent = "Pi SDK চালু হয়নি। Pi Browser-এ চেষ্টা করুন।";
+        return;
+      }
+
+      const state = crypto.randomUUID();
+      sessionStorage.setItem("pi_oauth_state", state);
+
+      try {
+        await window.Pi.signIn({
+          clientId: "WfuCLbijF5Znk9q6lWdRkvpN5y5DhbMSYb7KTtfBUFw", ",
+          redirectUri: "https://hossainmoinal1973.github.io/Bazar-app/signin/callback/",
+          scopes: ["username"],
+          state: state
+        });
+      } catch (error) {
+        message.textContent = "Pi Sign-In শুরু করা যায়নি। আবার চেষ্টা করুন।";
+        sessionStorage.removeItem("pi_oauth_state");
+      }
+    }
     showProducts();
   </script>
 </body>
