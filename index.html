@@ -275,11 +275,11 @@ let piReady = false;
         message.textContent = "Pi Sign-In শুরু হচ্ছে...";
 
         await window.Pi.signIn({
-          clientId: "তোমার আসল Client ID",
-          redirectUri: "https://hossainmoinal1973.github.io/Bazar-app/signin/callback/",
-          scopes: ["username"],
-          state: state
-        });
+  clientId: "এখানে তোমার আসল OAuth Client ID",
+  redirectUri: "https://hossainmoinal1973.github.io/Bazar-app/signin/callback/",
+  scopes: ["username"],
+  state: state
+});
       } catch (error) {
         message.textContent = "Pi Sign-In শুরু করা যায়নি। আবার চেষ্টা করুন।";
         sessionStorage.removeItem("pi_oauth_state");
